@@ -9,12 +9,13 @@ library(tidyverse)
 library(LaCroixColoR)
 library(patchwork)
 library(viridisLite)
+library(magrittr)
 
 ###DONS Map###
 
 #Load Map data
 Donmap <- read.csv("DONSUpdate.csv") 
-world <- map_data("world")
+world1 <- read.csv("world1.csv")
 
 key <- c("JAP" = "JPN", "XKO" = "XKX")
 Donmap %<>% mutate(ISO = recode(ISO, !!!key))
@@ -41,7 +42,7 @@ world_heatmap <- ggplot() +
     legend.title = element_blank(),  
     legend.text = element_text(size = 10),  
     legend.key.size = unit(4, "lines"), 
-    legend.key.height = unit(2.2, "cm"),  
+    legend.key.height = unit(1.2, "cm"),  
     legend.key.width = unit(0.7, "cm"), 
     panel.border = element_rect(color = "black", fill = NA, linewidth = 1)
   ) +
@@ -72,7 +73,7 @@ disease_bar<- ggplot(counted_donu, aes(x = reorder(DiseaseLevel1, -Count), y = C
   geom_bar(stat = "identity", fill = lacroix_palettes$PassionFruit[7]) +
   labs(x = "Diseases", y = "Number of Reports") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
         plot.title = element_text(hjust = 0.5)) +
@@ -96,7 +97,7 @@ country_bar <- ggplot(cocount_donu, aes(x = reorder(Country, -Count), y = Count)
   #geom_text(aes(label = Count, vjust = -0.1, hjust = -0.9, color = "black", size = 3) + 
   labs(x = "Country", y = "Number of Reports") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
         plot.title = element_text(hjust = 0.5)) +
@@ -124,7 +125,7 @@ country_disease_bar <- ggplot(combocount_donu, aes(x = reorder(paste(Country, Di
   geom_bar(stat = "identity", fill = lacroix_palettes$PassionFruit[7]) +
   labs(x = "Country and Disease", y = "Number of Reports") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
         plot.title = element_text(hjust = 0.5)) +
@@ -140,13 +141,18 @@ country_disease_bar <- ggplot(combocount_donu, aes(x = reorder(paste(Country, Di
 ##arrange the four plots
 
 
-ggarrange(world_heatmap,                                                
-          ggarrange(disease_bar, country_bar, country_disease_bar, ncol = 3, align = "h", labels = c("B", "C", "D")),
-          nrow = 2, 
-          labels = "A",
-          widths = c(2.5, 1), 
-          heights = c(2.5,1)
-) 
-world_heatmap /
-  (disease_bar | country_bar | country_disease_bar)
+
+
+Figure_2 <- (
+  world_heatmap / 
+    (disease_bar | country_bar | country_disease_bar) 
+) + plot_layout(ncol =1)
+
+world_heatmap + {
+  disease_bar + country_bar + country_disease_bar
+  } +
+  plot_layout(ncol=1, widths = c(2,.4,.4,.4))
+
+
+print(Figure_2)
 
