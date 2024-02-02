@@ -29,28 +29,8 @@ dons2 %>%
 
 don %>% bind_rows(don2) -> don
 
-don %>%
-  group_by(DiseaseLevel1) %>%
-  summarize(Count = sum(Count)) %>%
-  arrange(-Count) %>%
-  slice_min(Count, n = 50) %>% ### THIS IS SLICE **MIN**
-  pull(DiseaseLevel1) -> dis
-
-#setdiff(dis, c("MERS-CoV", "Ebola virus", "SARS-CoV", "Zika virus disease", "Influenza A")) -> dis
+#######
 
 don %>%
-  filter(DiseaseLevel1 %in% dis) %>%
-  group_by(DiseaseLevel1) %>%
-  complete(YearEvent = 1996:2023,
-           fill = list(Count = 0)) -> don
-don %>% as.data.frame() -> don
-
-don %>% rename(Year = YearEvent) -> don
-g <- bam(Count ~ s(Year) + s(Year, DiseaseLevel1, bs = "fs"), family = "poisson", data = don)
-
-library(gratia)
-p1 <- draw(g, select = "s(Year)") + ggtitle("(A) Overall trend")
-p2 <- draw(g, select = "s(Year,DiseaseLevel1)") + ggtitle("(B) Disease-specific trends") + ylab("Year") +
-  scale_color_manual(values=met.brewer("Cross", 77))
-p1 + p2 + plot_layout(ncol = 2) & theme_bw() + theme(legend.position = 'n')
-     
+  group_by(YearEvent) %>% 
+  count() %>% ggplot(aes(x = YearEvent, y = n)) + geom_point()
