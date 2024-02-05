@@ -51,22 +51,16 @@ sit_rep_df <- co.raw[which(co.raw$SitRep!="NO"),] %>%
   mutate(Date = as.Date(Date))
 
 ##Covid figure
+noco2 <- noco %>% filter(DON == "COVID")
 A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
-  geom_point(data = noco,
-             aes(x = as.Date(noco$Date),
-                 y = 1.25 * max(codon$weekCases),
-                 color = noco$DON),
-             alpha = 0.9,
-             size = 0.25) +
-  geom_point(data = sit_rep_df,
-             shape = 24, stroke = NA,
-             aes(x = as.Date(sit_rep_df$Date),
-                 y = 1.2 * max(codon$weekCases),
-                 fill = sit_rep_df$SitRep),
-             alpha = 0.9,
-             size = 1) +
-  scale_color_manual(values = c("#16256B", "#F9CE99")) +
-  scale_fill_manual(values = c("#fc9272", "#2ca25f")) +
+  theme_bw() + 
+  geom_jitter(data = noco2,
+             aes(x = as.Date(Date),
+                 y = -0.1*max(codon$weekCases)),
+             alpha = 0.25, 
+             size = 6, 
+             color = '#ff854fff', 
+             shape = 16) +
   geom_vline(xintercept = as.numeric(as.Date("2020-03-11")), 
              color = "grey", 
              linetype = "dashed", 
@@ -80,23 +74,24 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
         legend.position = "right") +
   labs(fill = "Reporting frequency",
        color = "DONS Topics") +
-  scale_y_continuous(limits = c(0, 1.3*max(codon$weekCases)),
-                     breaks = seq(from = 0, to = 25000000, by = 5000000),
-                     labels = scales::comma_format())
+  scale_y_continuous(limits = c(-0.3*max(codon$weekCases), 1*max(codon$weekCases)),
+                     #breaks = seq(from = 0, to = 25000000, by = 5000000),
+                     labels = scales::comma_format()); A
 
+nopox2 <- nopox %>% filter(DON == "MPOX")
 #Mpox Figure
 B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
-  geom_point(data = nopox,
-             aes(x = as.Date(nopox$date),
-                 y = 1.15*max(dompox$weekCases),
-                 color = nopox$DON),
-             alpha = 0.9, 
-             size = 0.25) +
+  geom_point(data = nopox2,
+             aes(x = as.Date(date),
+                 y = -0.1*max(dompox$weekCases)),
+             alpha = 0.25, 
+             size = 6, 
+             color = '#ff854fff', 
+             shape = 16) +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
              linetype = "dashed", 
              size = 0.8) +
-  scale_color_manual(values = c("#16256B", "#F9CE99")) +
   geom_line(color = "gray10") +
   labs(title = "B",
        x = "",
@@ -105,9 +100,10 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
         legend.key = element_blank(),
         legend.position = "right") +
   labs(color = "DONS Topics") +
-  scale_y_continuous(limits = c(0, 1.3*max(dompox$weekCases)),
-                     breaks = seq(from = 0, to = 8000 , by = 1000),
-                     labels = scales::comma_format())
+  scale_y_continuous(limits = c(-0.1*max(dompox$weekCases), 1*max(dompox$weekCases)),
+                     #breaks = seq(from = -2000, to = 8000 , by = 1000),
+                     labels = scales::comma_format()); B
 
 #Join em together
-A + B
+A / B
+ 
