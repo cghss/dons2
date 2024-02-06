@@ -52,15 +52,18 @@ sit_rep_df <- co.raw[which(co.raw$SitRep!="NO"),] %>%
 
 ##Covid figure
 noco2 <- noco %>% filter(DON == "COVID")
+noco2$weekcases <- c(0, 0, 2120, 2120, 4083599, 5219504, 4012227, 4424486)
+noco2$wordcount <- c(1157, 1133, 1301, 1118, 1710, 1788, 1945, 2917)
 A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
   theme_bw() + 
-  geom_jitter(data = noco2,
+  geom_point(data = noco2,
              aes(x = as.Date(Date),
-                 y = -0.1*max(codon$weekCases)),
-             alpha = 0.25, 
-             size = 6, 
+                 y = weekcases, 
+                 size = wordcount), 
              color = '#ff854fff', 
+             alpha = 0.6,
              shape = 16) +
+  scale_size_continuous(range = c(2, 20)) +
   geom_vline(xintercept = as.numeric(as.Date("2020-03-11")), 
              color = "grey", 
              linetype = "dashed", 
@@ -74,23 +77,25 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
         legend.position = "right") +
   labs(fill = "Reporting frequency",
        color = "DONS Topics") +
-  scale_y_continuous(limits = c(-0.3*max(codon$weekCases), 1*max(codon$weekCases)),
+  scale_y_continuous(limits = c(-0.01*max(codon$weekCases), 1*max(codon$weekCases)),
                      #breaks = seq(from = 0, to = 25000000, by = 5000000),
-                     labels = scales::comma_format()); A
+                     labels = scales::comma_format()) + 
+  guides(size = FALSE); A
 
 nopox2 <- nopox %>% filter(DON == "MPOX")
 nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800, 200) #Number of cases per week corresponding to the date of the MPOX dons publication
 nopox2$wordcount <- c(1783, 1758, 4909, 6403, 5301, 6266, 5565, 3726, 5333) #MPOX dons word count per report
-nopox2$wc_scale <- cut(nopox2$wordcount, breaks = c( 0, 1757, 1782, 3725, 5300, 5332, 5564, 6265, 6401, 7000 ), labels = c(2, 2.5, 3.5, 5.5, 5.7, 6, 7, 7.5, 8), right = FALSE)
 #Mpox Figure
 B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
+  theme_bw() + 
   geom_point(data = nopox2,
                       aes(x = as.Date(date),
                             y = weekcases,
-                            size = wc_scale),  
+                            size = wordcount),  
              color = '#ff854fff', 
-             alpha = 0.5,
+             alpha = 0.6,
              shape = 16) +
+  scale_size_continuous(range = c(2, 20))+
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
              linetype = "dashed", 
@@ -101,7 +106,7 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
        y = "New Cases per Week") +
   theme(panel.background = element_blank()) +
   labs(color = "DONS Topics") +
-  scale_y_continuous(limits = c(-0.1*max(dompox$weekCases), 1*max(dompox$weekCases)),
+  scale_y_continuous(limits = c(-0.01*max(dompox$weekCases), 1*max(dompox$weekCases)),
                      #breaks = seq(from = -2000, to = 8000 , by = 1000),
                      labels = scales::comma_format()) + 
   guides(size = FALSE) ; B
