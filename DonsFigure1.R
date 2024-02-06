@@ -59,11 +59,13 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
   geom_point(data = noco2,
              aes(x = as.Date(Date),
                  y = weekcases, 
-                 size = wordcount), 
+                 size = wordcount, 
+                 color = "DON Report Word Count"),
              color = '#ff854fff', 
              alpha = 0.6,
              shape = 16) +
-  scale_size_continuous(range = c(2, 20)) +
+  labs(size = "DON Report Word Count") +
+  scale_size_continuous(range = c(0.5, 8)) +
   geom_vline(xintercept = as.numeric(as.Date("2020-03-11")), 
              color = "grey", 
              linetype = "dashed", 
@@ -79,8 +81,7 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
        color = "DONS Topics") +
   scale_y_continuous(limits = c(-0.01*max(codon$weekCases), 1*max(codon$weekCases)),
                      #breaks = seq(from = 0, to = 25000000, by = 5000000),
-                     labels = scales::comma_format()) + 
-  guides(size = FALSE); A
+                     labels = scales::comma_format()); A
 
 nopox2 <- nopox %>% filter(DON == "MPOX")
 nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800, 200) #Number of cases per week corresponding to the date of the MPOX dons publication
@@ -91,11 +92,13 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   geom_point(data = nopox2,
                       aes(x = as.Date(date),
                             y = weekcases,
-                            size = wordcount),  
+                            size = wordcount, 
+                          color = "DON Report Word Count"),  
+             alpha = 0.5,
              color = '#ff854fff', 
-             alpha = 0.6,
              shape = 16) +
-  scale_size_continuous(range = c(2, 20))+
+  scale_size_continuous(range = c(1, 20)) +
+  labs(size = "DON Report Word Count") +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
              linetype = "dashed", 
@@ -104,13 +107,11 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   labs(title = "B",
        x = "",
        y = "New Cases per Week") +
-  theme(panel.background = element_blank()) +
-  labs(color = "DONS Topics") +
+  theme(panel.background = element_blank()) + 
   scale_y_continuous(limits = c(-0.01*max(dompox$weekCases), 1*max(dompox$weekCases)),
                      #breaks = seq(from = -2000, to = 8000 , by = 1000),
-                     labels = scales::comma_format()) + 
-  guides(size = FALSE) ; B
+                     labels = scales::comma_format()); B
 
 #Join em together
-A / B
+A / B + plot_layout(guides = "collect")
  
