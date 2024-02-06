@@ -64,8 +64,8 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
              color = '#ff854fff', 
              alpha = 0.6,
              shape = 16) +
-  labs(size = "DON Report Word Count") +
-  scale_size_continuous(range = c(1, 20)) +
+  labs(size = "Words per Report") +
+  scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
   geom_vline(xintercept = as.numeric(as.Date("2020-03-11")), 
              color = "grey", 
              linetype = "dashed", 
@@ -96,8 +96,8 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
              alpha = 0.6,
              color = '#ff854fff', 
              shape = 16) +
-  scale_size_continuous(range = c(1, 20)) +
-  labs(size = "DON Report Word Count") +
+  scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
+  labs(size = "Words per Report") +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
              linetype = "dashed", 
@@ -112,6 +112,6 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
                      labels = scales::comma_format()); B
 
 #Join em together
-A / B + plot_layout(guides = "collect") #& 
+(A + theme(legend.position = "none")) / B + plot_layout(guides = "collect") #& 
   #scale_size_continuous(limits = range(c(noco2$wordcount, nopox2$wordcount)))
  
