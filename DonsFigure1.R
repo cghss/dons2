@@ -79,14 +79,17 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
                      labels = scales::comma_format()); A
 
 nopox2 <- nopox %>% filter(DON == "MPOX")
+nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800, 200) #Number of cases per week corresponding to the date of the MPOX dons publication
+nopox2$wordcount <- c(1783, 1758, 4909, 6403, 5301, 6266, 5565, 3726, 5333) #MPOX dons word count per report
+nopox2$wc_scale <- cut(nopox2$wordcount, breaks = c( 0, 1757, 1782, 3725, 5300, 5332, 5564, 6265, 6401, 7000 ), labels = c(2, 2.5, 3.5, 5.5, 5.7, 6, 7, 7.5, 8), right = FALSE)
 #Mpox Figure
 B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   geom_point(data = nopox2,
-             aes(x = as.Date(date),
-                 y = -0.1*max(dompox$weekCases)),
-             alpha = 0.25, 
-             size = 6, 
+                      aes(x = as.Date(date),
+                            y = weekcases,
+                            size = wc_scale),  
              color = '#ff854fff', 
+             alpha = 0.5,
              shape = 16) +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
@@ -96,13 +99,12 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   labs(title = "B",
        x = "",
        y = "New Cases per Week") +
-  theme(panel.background = element_blank(),
-        legend.key = element_blank(),
-        legend.position = "right") +
+  theme(panel.background = element_blank()) +
   labs(color = "DONS Topics") +
   scale_y_continuous(limits = c(-0.1*max(dompox$weekCases), 1*max(dompox$weekCases)),
                      #breaks = seq(from = -2000, to = 8000 , by = 1000),
-                     labels = scales::comma_format()); B
+                     labels = scales::comma_format()) + 
+  guides(size = FALSE) ; B
 
 #Join em together
 A / B
