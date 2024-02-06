@@ -22,7 +22,7 @@ Donmap %>%
 
 
 # Merge world map data with dataset based on ISO codes
-world_data <- merge(world1, df, by.x = "iso_a3", by.y = "ISO", all.x = TRUE)
+world_data <- merge(world1, df, by.x = "iso_a3_eh", by.y = "ISO", all.x = TRUE)
 
 
 # Create a world map 
