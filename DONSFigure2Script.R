@@ -119,7 +119,7 @@ combocount_donu <- filtered_donu %>%
   top_n(5, wt = Count)
 
 #print raw numbers, if interested
-#print(combocount_donu)
+print(combocount_donu)
 
 
 custom_xlab <- paste(combocount_donu$Country, combocount_donu$DiseaseLevel1, sep = '/n', "and", '/n')
