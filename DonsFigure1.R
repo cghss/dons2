@@ -52,8 +52,8 @@ sit_rep_df <- co.raw[which(co.raw$SitRep!="NO"),] %>%
 
 ##Covid figure
 noco2 <- noco %>% filter(DON == "COVID")
-noco2$weekcases <- c(0, 0, 2120, 2120, 4083599, 5219504, 4012227, 4424486)
-noco2$wordcount <- c(1157, 1133, 1301, 1118, 1710, 1788, 1945, 2917)
+noco2$weekcases <- c(0, 0, 0, 2120, 2120, 4083599, 5219504, 4012227, 4424486)
+noco2$wordcount <- c(914, 1157, 1133, 1301, 1118, 1710, 1788, 1945, 2917)
 A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
   theme_bw() + 
   geom_point(data = noco2,
