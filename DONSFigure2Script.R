@@ -52,12 +52,15 @@ world_heatmap <- ggplot() +
 ###Bar Charts###
 
 #load data
-donu <- read_csv("DONSUpdate.csv")
+donu_raw <- read_csv("DONSUpdate.csv")
 
 #mutate dates for consistency
-donu %<>%
+donu_raw %<>%
   mutate(FormattedDate = format(dmy(ReportDate), "%m-%d-%Y"),
          YearEvent = year(mdy(FormattedDate)))
+
+donu <- donu_raw %>%
+  filter(!duplicated(donu[c("Headline", "ReportDate")]))
 
 ##Make the Top 5 Disease Bar Chart
 counted_donu <- donu %>%

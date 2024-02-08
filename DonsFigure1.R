@@ -66,7 +66,7 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
              shape = 16) +
   labs(size = "Words per Report") +
   scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
-  geom_vline(xintercept = as.numeric(as.Date("2020-03-11")), 
+  geom_vline(xintercept = as.numeric(as.Date("2020-01-30")), 
              color = "grey", 
              linetype = "dashed", 
              size = 0.8) +
