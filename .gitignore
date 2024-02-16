@@ -49,3 +49,4 @@ po/*~
 rsconnect/
 .ipynb_checkpoints/wordCount-checkpoint.ipynb
 pdf-test/.ipynb_checkpoints/1996 - Haemorrhagic fever with renal syndrome in Bosnia and Herzegovina-checkpoint.pdf
+.DS_Store
