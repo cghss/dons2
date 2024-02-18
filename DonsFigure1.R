@@ -59,13 +59,14 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
   geom_point(data = noco2,
              aes(x = as.Date(Date),
                  y = weekcases, 
-                 size = wordcount, 
+                 #size = wordcount,
+                 size = 1, 
                  color = "DON Report Word Count"),
              color = '#ff854fff', 
              alpha = 0.6,
              shape = 16) +
-  labs(size = "Words per Report") +
-  scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
+  #labs(size = "Words per Report") +
+  #scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
   geom_vline(xintercept = as.numeric(as.Date("2020-01-30")), 
              color = "grey", 
              linetype = "dashed", 
@@ -91,13 +92,13 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   geom_point(data = nopox2,
                       aes(x = as.Date(date),
                             y = weekcases,
-                            size = wordcount, 
+                            #size = wordcount, 
                           color = "DON Report Word Count"),  
              alpha = 0.6,
              color = '#ff854fff', 
              shape = 16) +
-  scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
-  labs(size = "Words per Report") +
+  #scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
+  #labs(size = "Words per Report") +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
              color = "grey", 
              linetype = "dashed", 
