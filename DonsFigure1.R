@@ -93,6 +93,7 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
                       aes(x = as.Date(date),
                             y = weekcases,
                             #size = wordcount, 
+                          size = 1,
                           color = "DON Report Word Count"),  
              alpha = 0.6,
              color = '#ff854fff', 
@@ -113,6 +114,6 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
                      labels = scales::comma_format()); B
 
 #Join em together
-(A + theme(legend.position = "none")) / B + plot_layout(guides = "collect") #& 
+(A + theme(legend.position = "none")) / ( B+ theme(legend.position = "none"))   #& 
   #scale_size_continuous(limits = range(c(noco2$wordcount, nopox2$wordcount)))
  
