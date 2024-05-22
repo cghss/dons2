@@ -60,7 +60,7 @@ donu_raw %<>%
          YearEvent = year(mdy(FormattedDate)))
 
 donu <- donu_raw %>%
-  filter(!duplicated(donu[c("Headline", "ReportDate")]))
+  filter(!duplicated(donu_raw[c("Headline", "ReportDate")]))
 
 ##Make the Top 5 Disease Bar Chart
 counted_donu <- donu %>%
