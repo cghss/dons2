@@ -62,7 +62,7 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
                  #size = wordcount,
                  size = 1, 
                  color = "DON Report Word Count"),
-             color = '#ff854fff', 
+             color = '#009457', 
              alpha = 0.6,
              shape = 16) +
   #labs(size = "Words per Report") +
@@ -71,21 +71,38 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
              color = "grey", 
              linetype = "dashed", 
              size = 0.8) +
+  geom_vline(xintercept = as.numeric(as.Date("2023-05-05")), 
+             color = "grey", 
+             linetype = "dashed", 
+             size = 0.8) +
   geom_line(color = "gray10") +
   labs(title = "A",
        x = "",
-       y = "New Cases per Week") +
+       y = "New COVID-19 Cases per Week") +
   theme(panel.background = element_blank(),
         legend.key = element_blank(),
         legend.position = "right") +
   labs(fill = "Reporting frequency") +
+  scale_x_date(limits = c(as.Date("2020-01-01"), as.Date("2023-06-30"))) +
   scale_y_continuous(limits = c(-0.01*max(codon$weekCases), 1*max(codon$weekCases)),
                      #breaks = seq(from = 0, to = 25000000, by = 5000000),
                      labels = scales::comma_format()); A
 
 nopox2 <- nopox %>% filter(DON == "MPOX")
-nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800, 200) #Number of cases per week corresponding to the date of the MPOX dons publication
+
+nopox2 <- nopox %>%
+  filter(DON == "MPOX") %>%
+  filter(as.Date(date) != as.Date("2023-11-23"))
+
+nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800) #Number of cases per week corresponding to the date of the MPOX dons publication
 nopox2$wordcount <- c(1783, 1758, 4909, 6403, 5301, 6266, 5565, 3726, 5333) #MPOX dons word count per report
+
+nopox2_removed <- nopox %>%
+  filter(DON == "MPOX") %>%
+  filter(as.Date(date) == as.Date("2023-11-23"))
+
+nopox2_removed$weekcases <- c(200) 
+
 #Mpox Figure
 B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
   theme_bw() + 
@@ -98,16 +115,21 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
              alpha = 0.6,
              color = '#ff854fff', 
              shape = 16) +
-  #scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
-  #labs(size = "Words per Report") +
+  geom_point(data = nopox2_removed, 
+             aes(x = as.Date(date), y = weekcases), 
+             color = "#00b5d7", shape = 16, size = 5, alpha = 1) +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
+             color = "grey", 
+             linetype = "dashed", 
+             size = 0.8) +
+  geom_vline(xintercept = as.numeric(as.Date("2023-05-10")), 
              color = "grey", 
              linetype = "dashed", 
              size = 0.8) +
   geom_line(color = "gray10") +
   labs(title = "B",
        x = "",
-       y = "New Cases per Week") +
+       y = "New Mpox Cases per Week") +
   theme(panel.background = element_blank()) + 
   scale_y_continuous(limits = c(-0.01*max(dompox$weekCases), 1*max(dompox$weekCases)),
                      #breaks = seq(from = -2000, to = 8000 , by = 1000),

@@ -28,7 +28,12 @@ world_data <- merge(world1, df, by.x = "iso_a3_eh", by.y = "ISO", all.x = TRUE)
 # Create a world map 
 world_heatmap <- ggplot() +
   geom_sf(data = world_data, aes(fill = n), color = "black", size = 0.2) +
-  scale_fill_gradientn(colours = rev(viridis(45, option = "G")), na.value = "white", breaks = seq(0, max(df$n), by = 5))+
+  scale_fill_gradientn(
+    colours = rev(viridis(45, option = "G")), 
+    na.value = "white", 
+    breaks = seq(0, max(df$n), 
+                 by = 5), 
+                 name = "Frequency of\nOutbreak Location") +
   theme_minimal() +
   theme(
     #panel.grid.major = element_blank(),
@@ -36,10 +41,9 @@ world_heatmap <- ggplot() +
     #axis.text = element_blank(),
     #axis.ticks = element_blank(),
     legend.position = "right",
-    legend.title = element_blank(),
     legend.text = element_text(size = 10),
     legend.key.size = unit(4, "lines"),
-    legend.key.height = unit(1.2, "cm"),
+    legend.key.height = unit(1.0, "cm"),
     legend.key.width = unit(0.7, "cm"), 
     plot.title = element_text(hjust = 0.5),
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5)
