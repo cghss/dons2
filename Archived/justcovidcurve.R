@@ -5,7 +5,7 @@ library(tidyverse)
 library(lubridate)
 
 ##Load data
-co.raw <- read.csv("mergeddonscovid.csv")
+co.raw <- read.csv("Data/covid_cases.csv")
 
 ##Mutate to pull out the cases by week
 co.raw$Date <- mdy(co.raw$Date)

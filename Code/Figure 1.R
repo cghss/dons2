@@ -156,5 +156,4 @@ world_heatmap / plot_spacer() / {
   plot_layout(nrow = 3, heights = c(2, 0.1, 1.2)) #+ 
   #plot_annotation(tag_levels = 'A')
  
-  
-
+ggsave("Figures/Figure 1.pdf", width = 8.5, height = 7.44)

@@ -6,8 +6,8 @@ library(lubridate)
 library(patchwork)
 
 ##Load data
-co.raw <- read.csv("mergeddonscovid.csv")
-dompox.raw <- read.csv("dompox_curve.csv")
+co.raw <- read.csv("Data/covid_cases.csv")
+dompox.raw <- read.csv("Data/mpox_cases.csv")
 
 ##Mutate to pull out the cases by week
 co.raw$Date <- mdy(co.raw$Date)
@@ -54,11 +54,11 @@ sit_rep_df <- co.raw[which(co.raw$SitRep!="NO"),] %>%
 noco2 <- noco %>% filter(DON == "COVID")
 noco2$weekcases <- c(0, 0, 0, 2120, 2120, 4083599, 5219504, 4012227, 4424486)
 noco2$wordcount <- c(914, 1157, 1133, 1301, 1118, 1710, 1788, 1945, 2917)
-A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
+A <- ggplot(codon, aes(x = weekdate, y = weekCases/1000000)) +
   theme_bw() + 
   geom_point(data = noco2,
              aes(x = as.Date(Date),
-                 y = weekcases, 
+                 y = weekcases/1000000, 
                  #size = wordcount,
                  size = 1, 
                  color = "DON Report Word Count"),
@@ -68,23 +68,23 @@ A <- ggplot(codon, aes(x = weekdate, y = weekCases)) +
   #labs(size = "Words per Report") +
   #scale_size_continuous(range = c(1, 15), limits = c(1,6500)) +
   geom_vline(xintercept = as.numeric(as.Date("2020-01-30")), 
-             color = "grey", 
-             linetype = "dashed", 
+             color = "gray30", 
+             linetype = "solid", 
              size = 0.8) +
   geom_vline(xintercept = as.numeric(as.Date("2023-05-05")), 
-             color = "grey", 
+             color = "gray30", 
              linetype = "dashed", 
              size = 0.8) +
   geom_line(color = "gray10") +
   labs(title = "A",
        x = "",
-       y = "New COVID-19 Cases per Week") +
+       y = "New COVID-19 cases (millions)") +
   theme(panel.background = element_blank(),
         legend.key = element_blank(),
         legend.position = "right") +
   labs(fill = "Reporting frequency") +
   scale_x_date(limits = c(as.Date("2020-01-01"), as.Date("2023-06-30"))) +
-  scale_y_continuous(limits = c(-0.01*max(codon$weekCases), 1*max(codon$weekCases)),
+  scale_y_continuous(limits = c(-0.01*max(codon$weekCases/1000000), 1*max(codon$weekCases/1000000)),
                      #breaks = seq(from = 0, to = 25000000, by = 5000000),
                      labels = scales::comma_format()); A
 
@@ -95,7 +95,7 @@ nopox2 <- nopox %>%
   filter(as.Date(date) != as.Date("2023-11-23"))
 
 nopox2$weekcases <- c(135, 135, 187, 615, 530, 1050, 1350, 1800) #Number of cases per week corresponding to the date of the MPOX dons publication
-nopox2$wordcount <- c(1783, 1758, 4909, 6403, 5301, 6266, 5565, 3726, 5333) #MPOX dons word count per report
+nopox2$wordcount <- c(1783, 1758, 4909, 6403, 5301, 6266, 5565, 3726) #MPOX dons word count per report
 
 nopox2_removed <- nopox %>%
   filter(DON == "MPOX") %>%
@@ -104,11 +104,11 @@ nopox2_removed <- nopox %>%
 nopox2_removed$weekcases <- c(200) 
 
 #Mpox Figure
-B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
+B <- ggplot(dompox, aes(x = weekdate, y = weekCases/1000)) +
   theme_bw() + 
   geom_point(data = nopox2,
                       aes(x = as.Date(date),
-                            y = weekcases,
+                            y = weekcases/1000,
                             #size = wordcount, 
                           size = 1,
                           color = "DON Report Word Count"),  
@@ -116,26 +116,29 @@ B <- ggplot(dompox, aes(x = weekdate, y = weekCases)) +
              color = '#ff854fff', 
              shape = 16) +
   geom_point(data = nopox2_removed, 
-             aes(x = as.Date(date), y = weekcases), 
+             aes(x = as.Date(date), y = weekcases/1000), 
              color = "#00b5d7", shape = 16, size = 5, alpha = 1) +
   geom_vline(xintercept = as.numeric(as.Date("2022-07-23")), 
-             color = "grey", 
-             linetype = "dashed", 
+             color = "gray30", 
+             linetype = "solid", 
              size = 0.8) +
   geom_vline(xintercept = as.numeric(as.Date("2023-05-10")), 
-             color = "grey", 
+             color = "gray30", 
              linetype = "dashed", 
              size = 0.8) +
   geom_line(color = "gray10") +
   labs(title = "B",
        x = "",
-       y = "New Mpox Cases per Week") +
+       y = "New mpox cases (thousands)") +
   theme(panel.background = element_blank()) + 
-  scale_y_continuous(limits = c(-0.01*max(dompox$weekCases), 1*max(dompox$weekCases)),
+  scale_y_continuous(limits = c(-0.01*max(dompox$weekCases/1000), 1*max(dompox$weekCases/1000)),
                      #breaks = seq(from = -2000, to = 8000 , by = 1000),
                      labels = scales::comma_format()); B
 
 #Join em together
-(A + theme(legend.position = "none")) / ( B+ theme(legend.position = "none"))   #& 
+(A + theme(legend.position = "none")) / ( B+ theme(legend.position = "none")) +
+  theme(plot.margin = unit(c(0,0.7,0,0.3), "cm"))   #& 
   #scale_size_continuous(limits = range(c(noco2$wordcount, nopox2$wordcount)))
- 
+
+ggsave("Figures/Figure 2.pdf", width = 8.26, height = 5.97)
+
