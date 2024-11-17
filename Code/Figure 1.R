@@ -10,7 +10,7 @@ library(viridisLite)
 ###DONS Map###
 
 #Load Map data
-Donmap <- read_csv("DONSUpdate.csv") 
+Donmap <- read_csv("Data/DONSUpdate.csv") 
 
 world1 <- ne_countries()
 
@@ -49,14 +49,13 @@ world_heatmap <- ggplot() +
     panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5)
   ) +
   labs(fill = "Frequency") + 
-  coord_sf(expand = FALSE) + ggtitle("WHO Disease Outbreak News Reports (2020-2023)"); world_heatmap
-
-
+  coord_sf(expand = FALSE) + ggtitle("WHO Disease Outbreak News Reports (2020-2023)") + 
+  guides(fill=guide_colorbar(ticks.colour = NA)); world_heatmap
 
 ###Bar Charts###
 
 #load data
-donu_raw <- read_csv("DONSUpdate.csv")
+donu_raw <- read_csv("Data/DONSUpdate.csv")
 
 #mutate dates for consistency
 donu_raw %<>%
